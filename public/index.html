@@ -221,6 +221,15 @@ details.what p{margin-top:8px;max-width:68ch}
 .list h3 small{display:block;font:400 13px/1.4 var(--body);letter-spacing:0;color:var(--muted);margin-top:4px}
 .rate{display:flex;justify-content:space-between;align-items:baseline;gap:12px;background:var(--surface);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:14px;color:var(--muted)}
 .rate b{font:700 20px var(--display);color:var(--ink);font-variant-numeric:tabular-nums}
+.tapnote{display:inline-flex;align-items:center;gap:8px;margin-top:16px;background:var(--accent-soft);color:var(--accent);font-weight:600;font-size:14px;padding:9px 14px;border-radius:99px}
+.tapnote svg{width:18px;height:18px;flex:none}
+.peek{display:flex;align-items:center;gap:8px;margin-top:8px;color:var(--accent);font:600 13px var(--body)}
+.peek em{font-style:normal}
+.peek .eye{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--surface);border:1px solid var(--accent);flex:none}
+.peek svg{width:16px;height:16px}
+.g-row:hover .peek em{text-decoration:underline}
+@keyframes ping{0%{box-shadow:0 0 0 0 var(--accent)}70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+@media(prefers-reduced-motion:no-preference){.g-row[aria-expanded="false"] .peek .eye{animation:ping 2.2s infinite}}
 footer{padding-block:40px 56px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:14px}
 body{margin:0}img{max-width:100%}[hidden]{display:none!important}
 </style>
@@ -294,7 +303,8 @@ body{margin:0}img{max-width:100%}[hidden]{display:none!important}
       <div class="eyebrow">Alcance y cronograma</div>
       <div>
         <h2>Cinco etapas en cinco semanas</h2>
-        <p class="sub">Un solo paquete que une UX/UI, CMS, migración y traducción. Toca una etapa para ver qué incluye.</p>
+        <p class="sub">Un solo paquete que une UX/UI, CMS, migración y traducción.</p>
+        <p class="tapnote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Toca cada etapa para ver qué incluye</p>
       </div>
     </div>
     <div class="gantt" id="gantt">
@@ -316,7 +326,6 @@ body{margin:0}img{max-width:100%}[hidden]{display:none!important}
       <div class="pillar"><div class="n">Técnica</div><h3>Asesor tech lead</h3><p>Un desarrollador fullstack con 6 años de experiencia acompaña la arquitectura, el CMS y la revisión de código.</p></div>
       <div class="pillar"><div class="n">Seguridad</div><h3>Revisión externa</h3><p>Una persona independiente revisa la seguridad y el backend antes del lanzamiento.</p></div>
     </div>
-    <div class="scale"><b>Sobre la escala del proyecto.</b> Es el sitio de mayor tamaño que asumimos. Por eso proponemos aprobaciones por hitos, un alcance que se confirma con el inventario de la primera etapa y soporte posterior al lanzamiento.</div>
   </section>
 
   <section id="inversion">
@@ -565,7 +574,7 @@ stages.forEach((st,i)=>{
   r.className="g-row";r.type="button";r.setAttribute("aria-expanded","false");r.id="st"+i;
   let cells="";
   for(let w=1;w<=5;w++){cells+='<div class="g-cell">'+((w>=st.a&&w<=st.b)?'<div class="g-bar"></div>':'')+'</div>'}
-  r.innerHTML='<div class="g-name">'+st.n+'<small>'+st.s+'</small></div>'+cells;
+  r.innerHTML='<div class="g-name">'+st.n+'<small>'+st.s+'</small><span class="peek"><span class="eye"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span><em>Ver detalle</em></span></div>'+cells;
   const d=document.createElement("div");
   d.className="detail";d.hidden=true;
   d.innerHTML='<ul>'+st.d.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
@@ -574,6 +583,7 @@ stages.forEach((st,i)=>{
     g.querySelectorAll(".g-row").forEach(x=>x.setAttribute("aria-expanded","false"));
     g.querySelectorAll(".detail").forEach(x=>x.hidden=true);
     if(!o){r.setAttribute("aria-expanded","true");d.hidden=false}
+    g.querySelectorAll(".g-row").forEach(x=>{x.querySelector(".peek em").textContent=x.getAttribute("aria-expanded")==="true"?"Ocultar detalle":"Ver detalle"});
   });
   g.appendChild(r);g.appendChild(d);
 });
